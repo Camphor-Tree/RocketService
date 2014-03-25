@@ -2,7 +2,7 @@ package com.logpie.rocket.tool;
 
 import org.json.JSONObject;
 
-import com.logpie.rocket.MetricRecord;
+import com.logpie.rocket.metric.MetricRecord;
 
 public class RocketRequestJSONParser {
 
