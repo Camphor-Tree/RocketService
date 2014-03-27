@@ -5,11 +5,12 @@ import java.net.UnknownHostException;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 
-public class MongoDBHelper implements DBConnection{
-
+public class MongoDBHelper extends Database{
 	DB mDB;
-	
-	public MongoDBHelper(){}
+
+	public MongoDBHelper(){
+		super(DBenum.MongoDB);
+	}
 	
 	@Override
 	public void connect() throws UnknownHostException {
@@ -26,5 +27,8 @@ public class MongoDBHelper implements DBConnection{
 		mDB = mongoClient.getDB("rocket");
 	}
 
+	public void createTable(String table){
+		
+	}
 	
 }

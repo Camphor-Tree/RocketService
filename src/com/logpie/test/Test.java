@@ -1,13 +1,18 @@
 package com.logpie.test;
 
-import com.logpie.database.common.DBManager;
-import com.logpie.database.common.DBManager.Database;
+import java.net.UnknownHostException;
+
+import com.logpie.database.common.DBenum;
+import com.logpie.database.common.Database;
+import com.logpie.database.common.MongoDBHelper;
 
 public class Test {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws UnknownHostException {
 		// TODO Auto-generated method stub
-		DBManager db = new DBManager(Database.MongoDB);
+		Database db = new MongoDBHelper();
+		db.connect();
+		
 	}
 
 }

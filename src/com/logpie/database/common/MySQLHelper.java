@@ -1,11 +1,20 @@
 package com.logpie.database.common;
 
-public class MySQLHelper implements DBConnection{
+import com.mongodb.DB;
 
+public class MySQLHelper extends Database{
+	DB mDB;
+
+	public MySQLHelper(){
+		super(DBenum.MySQL);
+	}
 	@Override
 	public void connect() {
 		// TODO Auto-generated method stub
 		
 	}
 
+	public void createTable(String table){
+		
+	}
 }
