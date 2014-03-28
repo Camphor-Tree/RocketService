@@ -2,7 +2,6 @@ package com.logpie.test;
 
 import java.net.UnknownHostException;
 
-import com.logpie.database.common.DBenum;
 import com.logpie.database.common.Database;
 import com.logpie.database.common.MongoDBHelper;
 

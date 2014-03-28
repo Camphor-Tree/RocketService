@@ -25,12 +25,26 @@ public class MetricRecord {
   "mobile_device":"true",
   "OS_type":"android",
   "OS_version":"4.1",
-  "Device_Manufacture":"samsung"
+  "device_manufacture":"Samsung"
+  "device_version":"Galaxy S3"
  }
 	 */
-	public MetricRecord() {
-		super();
-	}
+
+	public static final String key_RequestID = "requestID";
+	public static final String key_Company = "company";
+	public static final String key_Platform = "platform";
+	public static final String key_Application = "application";
+	public static final String key_SoftwareVersion = "software_version";
+	public static final String key_Component = "component";
+	public static final String key_Metrics = "metrics";
+	public static final String key_Action = "action";
+	public static final String key_MetricTime = "time";
+	public static final String key_MobileDevice = "mobile_device";
+	public static final String key_OSType = "OS_type";
+	public static final String key_OSVersion = "OS_version";
+	public static final String key_DeviceManufacture = "device_manufacture";
+	public static final String key_DeviceVersion = "device_version";
+	
 	//The fields below are mandatory
 	private String mRequestID;
 	private String mCompany;
@@ -40,11 +54,13 @@ public class MetricRecord {
 	private String mComponent;
     private String mAction;
     private Integer mMetricTime;
+    
     //The files below are optional
     private Boolean mIsMobileDevice;
     private String mOSType;
     private Float mOSVersion;
     private String mDeviceManufacture;
+    private String mDeviceVersion;
 	public String getRequestID() {
 		return mRequestID;
 	}
@@ -116,6 +132,12 @@ public class MetricRecord {
 	}
 	public void setDeviceManufacture(String deviceManufacture) {
 		mDeviceManufacture = deviceManufacture;
+	}
+	public String getDeviceVersion() {
+		return mDeviceVersion;
+	}
+	public void setDeviceVersion(String deviceVersion) {
+		mDeviceVersion = deviceVersion;
 	}
 
 }
