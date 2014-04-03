@@ -2,7 +2,7 @@ package com.logpie.database.common;
 
 import java.net.UnknownHostException;
 
-public abstract class Database {
+public abstract class DatabaseHelper {
 	
 	public enum DBenum {
 		MongoDB ("MongoDB","2.4"),
@@ -28,15 +28,12 @@ public abstract class Database {
 	private String mName;
 	private String mVersion;
 	
-	public Database(DBenum db){
+	public DatabaseHelper(DBenum db){
 		this.setName(db.getName());
 		this.setVersion(db.getVersion());
 	}
 	
-	public void connect() throws UnknownHostException{  
-		// connect to database
-	}
-	
+	protected abstract void connect();
 	public void createTable(String table){
 		// create table or collection
 	}

@@ -1,17 +1,26 @@
 package com.logpie.test;
 
 import java.net.UnknownHostException;
+import java.util.Set;
 
-import com.logpie.database.common.Database;
+import com.logpie.database.common.DatabaseHelper;
 import com.logpie.database.common.MongoDBHelper;
+import com.mongodb.DB;
 
 public class Test {
 
 	public static void main(String[] args) throws UnknownHostException {
 		// TODO Auto-generated method stub
-		Database db = new MongoDBHelper();
-		db.connect();
-		
+		MongoDBHelper db = MongoDBHelper.getInstance();
+		System.out.println(db.getVersion());
+		DB rocketDB = db.getDB("Rocket");
+		Set<String> set = rocketDB.getCollectionNames();
+		for(String a : set)
+		{
+			System.out.println(a);
+		}
+		//System.out.println(rocketDB.getStats());
+		//rocketDB.
 	}
 
 }
