@@ -2,7 +2,7 @@ package com.logpie.database.common;
 
 import com.mongodb.DB;
 
-public class MySQLHelper extends Database{
+public class MySQLHelper extends DatabaseHelper{
 	DB mDB;
 
 	public MySQLHelper(){
