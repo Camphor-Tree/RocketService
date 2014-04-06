@@ -2,6 +2,9 @@ package com.logpie.database.common;
 
 import java.net.UnknownHostException;
 
+import com.logpie.database.exception.DBNotFoundException;
+import com.mongodb.DBCollection;
+
 public abstract class DatabaseHelper {
 	
 	public enum DBenum {
@@ -34,9 +37,8 @@ public abstract class DatabaseHelper {
 	}
 	
 	protected abstract void connect();
-	public void createTable(String table){
-		// create table or collection
-	}
+	
+	public abstract Object createTable(String dbName,String tableName) throws DBNotFoundException;
 	
 	public void insert(){
 		
