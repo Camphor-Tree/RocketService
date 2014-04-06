@@ -1,9 +1,6 @@
 package com.logpie.database.common;
 
-import java.net.UnknownHostException;
-
 import com.logpie.database.exception.DBNotFoundException;
-import com.mongodb.DBCollection;
 
 public abstract class DatabaseHelper {
 	

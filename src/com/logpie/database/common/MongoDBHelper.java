@@ -1,17 +1,14 @@
 package com.logpie.database.common;
 
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
 
-import org.eclipse.jdt.internal.compiler.ast.ThrowStatement;
-
 import com.logpie.database.exception.DBNotFoundException;
+import com.logpie.rocket.metric.MetricRecord;
 import com.logpie.rocket.tool.RocketLog;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
-import com.mongodb.MongoClientException;
 
 public class MongoDBHelper extends DatabaseHelper{
 	private final String TAG = MongoDBHelper.class.getName();
@@ -97,5 +94,17 @@ public class MongoDBHelper extends DatabaseHelper{
 		}
 	}
 
-	
+	public void insert(String dbName, String tableName, MetricRecord record) throws DBNotFoundException{
+		if(!mDBMap.containsKey(dbName))
+		{
+			RocketLog.i(TAG,"The database hasn't been established");
+			throw new DBNotFoundException(dbName);
+		}
+		else
+		{
+			RocketLog.i(TAG, "insert collection: "+tableName+" in DB:" + dbName);
+			DBCollection coll = mDBMap.get(dbName).getCollection(tableName);
+			
+		}
+	}
 }
