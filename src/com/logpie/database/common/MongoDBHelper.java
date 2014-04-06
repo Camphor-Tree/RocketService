@@ -4,17 +4,24 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
 
+import org.eclipse.jdt.internal.compiler.ast.ThrowStatement;
+
+import com.logpie.database.exception.DBNotFoundException;
 import com.logpie.rocket.tool.RocketLog;
 import com.mongodb.DB;
+import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientException;
 
 public class MongoDBHelper extends DatabaseHelper{
+	private final String TAG = MongoDBHelper.class.getName();
+	
 	//this should be Singleton, the one and the only.
 	private static MongoDBHelper sMongoDBHelper;
 	//http://api.mongodb.org/java/current/
 	//A MongoDB client with internal connection pooling. For most applications, you should have one MongoClient instance for the entire JVM.
 	private MongoClient mMongoClient;
-	private String TAG = MongoDBHelper.class.getName();
+	
 	private HashMap<String,DB> mDBMap;
 	
 	private MongoDBHelper(){
@@ -33,21 +40,7 @@ public class MongoDBHelper extends DatabaseHelper{
 	
 	@Override
 	protected void connect(){
-		try {
-			/*
-			 * Or to connect to a replica set, with auto-discovery of the primary, 
-			 * supply a seed list of members
-			 * MongoClient mongoClient = new MongoClient(Arrays.asList(
-			  							 new ServerAddress("localhost", 27017),
-	                                     new ServerAddress("localhost", 27018),
-	                                     new ServerAddress("localhost", 27019)));
-			 */
-			mMongoClient = new MongoClient("localhost");
-			
-		} catch (UnknownHostException e) {
-			RocketLog.e(this.TAG, "The Host doesnot exist!");
-			e.printStackTrace();
-		}
+		mMongoClient = MongoSingleConnection.getMongoClient();
 	}
 	
 	//return all the db exist on the MongoDB server
@@ -89,8 +82,20 @@ public class MongoDBHelper extends DatabaseHelper{
 		return mDBMap.get(dbName);
 	}
 
-	public void createTable(String table){
-		
+	// create a collection in specific MongoDB's database
+	@Override
+	public DBCollection createTable(String dbName, String tableName) throws DBNotFoundException {
+		if(!mDBMap.containsKey(dbName))
+		{
+			RocketLog.i(TAG,"The database hasn't been established");
+			throw new DBNotFoundException(dbName);
+		}
+		else
+		{	
+			RocketLog.i(TAG, "Start create collection: "+tableName+" in DB:" + dbName);
+			return mDBMap.get(dbName).getCollection(tableName);
+		}
 	}
+
 	
 }
