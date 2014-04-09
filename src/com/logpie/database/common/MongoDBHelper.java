@@ -1,17 +1,24 @@
+/*
+ * Copyright (c) 2014 logpie.com
+ * All rights reserved.
+*/
 package com.logpie.database.common;
 
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
 
-import org.eclipse.jdt.internal.compiler.ast.ThrowStatement;
-
 import com.logpie.database.exception.DBNotFoundException;
+import com.logpie.rocket.data.MetricRecord;
 import com.logpie.rocket.tool.RocketLog;
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.Cursor;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
-import com.mongodb.MongoClientException;
+import com.mongodb.WriteConcern;
+import com.mongodb.WriteResult;
+
 
 public class MongoDBHelper extends DatabaseHelper{
 	private final String TAG = MongoDBHelper.class.getName();
@@ -21,7 +28,7 @@ public class MongoDBHelper extends DatabaseHelper{
 	//http://api.mongodb.org/java/current/
 	//A MongoDB client with internal connection pooling. For most applications, you should have one MongoClient instance for the entire JVM.
 	private MongoClient mMongoClient;
-	
+	//DBMap store all the db RocketService connect to. (dbName -> DB)
 	private HashMap<String,DB> mDBMap;
 	
 	private MongoDBHelper(){
@@ -95,6 +102,56 @@ public class MongoDBHelper extends DatabaseHelper{
 			RocketLog.i(TAG, "Start create collection: "+tableName+" in DB:" + dbName);
 			return mDBMap.get(dbName).getCollection(tableName);
 		}
+	}
+	
+	public boolean isDBExist(String dbName){
+		 List<String> dbList;
+		 if(mMongoClient!=null)
+		 {
+			dbList = mMongoClient.getDatabaseNames();
+		 }
+		 else
+			 return false;
+		 for(String db : dbList)
+		 {
+			 if(dbName==db)
+				 return true;
+		 }
+		 return false;
+	}
+	
+	//insert one single record into specific collection
+	//return true, if success.
+	public boolean insertSingleRecord(String dbName, String collectionName, BasicDBObject dbObject){
+		return mMongoClient.getDB(dbName).getCollection(collectionName).insert(dbObject,WriteConcern.SAFE).getLastError().ok();
+	}
+	
+	//only if you are sure about the query result only have one record or you just need one record,
+	//then you should call this api, otherwise you need to call query(DBCollection collection, BasicDBObject dbObject)
+	public BasicDBObject querySingleRecord(DBCollection collection, BasicDBObject dbObject)
+	{
+		Cursor cursor = collection.find(dbObject);
+	    if(cursor.hasNext()) {
+		    BasicDBObject queryResult = (BasicDBObject)cursor.next();
+		    cursor.close();
+		    return queryResult;
+	    }
+	    else
+	    	return null;
+	}
+	
+	public BasicDBList query(DBCollection collection, BasicDBObject dbObject)
+	{
+		Cursor cursor = collection.find(dbObject);
+		BasicDBList dbObjectList = new BasicDBList();
+		try {
+	    while(cursor.hasNext()) {
+	       dbObjectList.add((BasicDBObject)cursor.next());
+		   }
+		} finally {
+		   cursor.close();
+		}
+		return dbObjectList;
 	}
 
 	

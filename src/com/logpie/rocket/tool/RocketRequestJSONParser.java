@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2014 logpie.com
+ * All rights reserved.
+*/
 package com.logpie.rocket.tool;
 
 import java.util.LinkedList;
@@ -7,7 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.logpie.rocket.metric.MetricRecord;
+import com.logpie.rocket.data.MetricRecord;
 
 public class RocketRequestJSONParser {
 	private static final String TAG = RocketRequestJSONParser.class.getName(); 
@@ -30,7 +34,7 @@ public class RocketRequestJSONParser {
 	String mCompany;
 	String mPlatform;
 	String mApplication;
-	Float mSoftwareVersion;
+	String mSoftwareVersion;
 	JSONArray mMetrics;
 	
 	boolean mIsMobileDevice;
@@ -49,7 +53,7 @@ public class RocketRequestJSONParser {
 			mCompany = requestJSON.getString(MetricRecord.key_Company);
 			mPlatform = requestJSON.getString(MetricRecord.key_Platform);
 			mApplication = requestJSON.getString(MetricRecord.key_Application);
-			mSoftwareVersion = Float.valueOf(requestJSON.getString(MetricRecord.key_SoftwareVersion));
+			mSoftwareVersion = requestJSON.getString(MetricRecord.key_SoftwareVersion);
 			mMetrics = requestJSON.getJSONArray(MetricRecord.key_Metrics);
 			mIsMobileDevice = Boolean.getBoolean((requestJSON.getString(MetricRecord.key_MobileDevice)));
 		} catch (JSONException e) {
@@ -86,7 +90,7 @@ public class RocketRequestJSONParser {
 					}
 					metricRecord.setComponent(mMetrics.getJSONObject(i).getString(MetricRecord.key_Component));
 					metricRecord.setAction(mMetrics.getJSONObject(i).getString(MetricRecord.key_Action));
-					metricRecord.setMetricTime(Integer.valueOf(mMetrics.getJSONObject(i).getString(MetricRecord.key_MetricTime)));
+					metricRecord.setMetricTime(mMetrics.getJSONObject(i).getString(MetricRecord.key_MetricTime));
 				} catch (JSONException e) {
 					RocketLog.e(TAG, "Request JSON is malformed");
 					e.printStackTrace();
