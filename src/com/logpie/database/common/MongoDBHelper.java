@@ -10,6 +10,7 @@ import java.util.List;
 import com.logpie.database.exception.DBNotFoundException;
 import com.logpie.rocket.data.MetricRecord;
 import com.logpie.rocket.tool.RocketLog;
+
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.Cursor;
@@ -17,7 +18,6 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
-import com.mongodb.WriteResult;
 
 
 public class MongoDBHelper extends DatabaseHelper{
@@ -154,5 +154,17 @@ public class MongoDBHelper extends DatabaseHelper{
 		return dbObjectList;
 	}
 
-	
+	public void insert(String dbName, String tableName, MetricRecord record) throws DBNotFoundException{
+		if(!mDBMap.containsKey(dbName))
+		{
+			RocketLog.i(TAG,"The database hasn't been established");
+			throw new DBNotFoundException(dbName);
+		}
+		else
+		{
+			RocketLog.i(TAG, "insert collection: "+tableName+" in DB:" + dbName);
+			DBCollection coll = mDBMap.get(dbName).getCollection(tableName);
+			
+		}
+	}
 }
