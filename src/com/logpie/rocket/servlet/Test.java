@@ -2,7 +2,7 @@
  * Copyright (c) 2014 logpie.com
  * All rights reserved.
 */
-package com.logpie.test;
+package com.logpie.rocket.servlet;
 
 import java.io.IOException;
 import java.io.OutputStream;
