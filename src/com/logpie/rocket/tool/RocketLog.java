@@ -74,6 +74,5 @@ public final class RocketLog {
 			RocketLog.e(TAG,"IOException: When writing log file.");
 			e.printStackTrace();
 		}
-	}
-	
+	}	
 }

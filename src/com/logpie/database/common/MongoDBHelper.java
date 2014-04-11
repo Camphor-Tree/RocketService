@@ -29,12 +29,12 @@ public class MongoDBHelper extends DatabaseHelper{
 	//A MongoDB client with internal connection pooling. For most applications, you should have one MongoClient instance for the entire JVM.
 	private MongoClient mMongoClient;
 	//DBMap store all the db RocketService connect to. (dbName -> DB)
-	private HashMap<String,DB> mDBMap;
+	private static HashMap<String,DB> sDBMap;
 	
 	private MongoDBHelper(){
 		super(DBenum.MongoDB);
 		this.connect();
-		mDBMap = new HashMap<String,DB>();	
+		sDBMap = new HashMap<String,DB>();	
 	}
 	
 	public synchronized static MongoDBHelper getInstance()
@@ -76,23 +76,23 @@ public class MongoDBHelper extends DatabaseHelper{
 	//MongoClient will create a db even if the dbName doesn't exist.
 	public DB getDB(String dbName)
 	{
-		if(mDBMap == null)
+		if(sDBMap == null)
 		{
-			mDBMap = new HashMap<String,DB>();
-			mDBMap.put(dbName,mMongoClient.getDB(dbName));
+			sDBMap = new HashMap<String,DB>();
+			sDBMap.put(dbName,mMongoClient.getDB(dbName));
 		}
 		else
 		{
-			if(!mDBMap.containsKey(dbName))
-				mDBMap.put(dbName,mMongoClient.getDB(dbName));
+			if(!sDBMap.containsKey(dbName))
+				sDBMap.put(dbName,mMongoClient.getDB(dbName));
 		}
-		return mDBMap.get(dbName);
+		return sDBMap.get(dbName);
 	}
 
 	// create a collection in specific MongoDB's database
 	@Override
 	public DBCollection createTable(String dbName, String tableName) throws DBNotFoundException {
-		if(!mDBMap.containsKey(dbName))
+		if(!sDBMap.containsKey(dbName))
 		{
 			RocketLog.i(TAG,"The database hasn't been established");
 			throw new DBNotFoundException(dbName);
@@ -100,10 +100,11 @@ public class MongoDBHelper extends DatabaseHelper{
 		else
 		{	
 			RocketLog.i(TAG, "Start create collection: "+tableName+" in DB:" + dbName);
-			return mDBMap.get(dbName).getCollection(tableName);
+			return sDBMap.get(dbName).getCollection(tableName);
 		}
 	}
 	
+	//check whether the DB already established
 	public boolean isDBExist(String dbName){
 		 List<String> dbList;
 		 if(mMongoClient!=null)
@@ -119,6 +120,11 @@ public class MongoDBHelper extends DatabaseHelper{
 		 }
 		 return false;
 	}
+	
+	//check whether the collection has been established
+	public 
+	
+	
 	
 	//insert one single record into specific collection
 	//return true, if success.
@@ -154,17 +160,32 @@ public class MongoDBHelper extends DatabaseHelper{
 		return dbObjectList;
 	}
 
-	public void insert(String dbName, String tableName, MetricRecord record) throws DBNotFoundException{
-		if(!mDBMap.containsKey(dbName))
+	public boolean insert(String dbName, String tableName, BasicDBObject dbObject) throws DBNotFoundException{
+		if(!sDBMap.containsKey(dbName))
 		{
 			RocketLog.i(TAG,"The database hasn't been established");
 			throw new DBNotFoundException(dbName);
 		}
 		else
 		{
-			RocketLog.i(TAG, "insert collection: "+tableName+" in DB:" + dbName);
-			DBCollection coll = mDBMap.get(dbName).getCollection(tableName);
-			
+			RocketLog.i(TAG, "Insert record into collection: "+tableName+" in DB:" + dbName);
+			DBCollection collection = sDBMap.get(dbName).getCollection(tableName);
+			return insert(sDBMap.get(dbName),collection,dbObject);
 		}
 	}
+	
+	public boolean insert(DB db, DBCollection collection, BasicDBObject dbObject) throws DBNotFoundException{
+		if(!sDBMap.containsKey(db.getName()))
+		{
+			RocketLog.i(TAG,"The database hasn't been established");
+			throw new DBNotFoundException(db.getName());
+		}
+		else
+		{
+			RocketLog.i(TAG, "Insert record into collection: "+collection.getName()+" in DB:" + db.getName());
+			return collection.insert(dbObject,WriteConcern.SAFE).getLastError().ok();
+		}
+	}
+	
+	
 }
