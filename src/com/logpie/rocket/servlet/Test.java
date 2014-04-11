@@ -11,6 +11,7 @@ import java.net.UnknownHostException;
 import java.util.Set;
 
 import com.logpie.database.common.MongoDBHelper;
+import com.logpie.rocket.tool.RocketLog;
 import com.mongodb.DB;
 
 public class Test {
@@ -30,7 +31,17 @@ public class Test {
 		//rocketDB.
 		 * 
 		 */
+		testRocketWriteLog();
 		
+	}
+	private static void testRocketWriteLog(){
+		RocketLog.writeFile("This is just a test1!");
+		RocketLog.writeFile("This is just a test2!");
+		RocketLog.writeFile("This is just a test3!");
+		RocketLog.writeFile("This is just a test4!");
+	}
+	
+	private void testConnection(){
 		Socket socket;
 		try{
 			socket = new Socket("localhost",8080);

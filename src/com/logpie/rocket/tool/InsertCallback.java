@@ -12,13 +12,13 @@ public class InsertCallback implements RocketCallback {
 	@Override
 	public void onSuccess(JSONObject result) {
 		// TODO Auto-generated method stub
-		RocketLog.writeFile(date, result.toString());
+		RocketLog.writeFile(result.toString());
 	}
 
 	@Override
 	public void onError(JSONObject error) {
 		// TODO Auto-generated method stub
-		RocketLog.writeFile(date, error.toString());
+		RocketLog.writeFile(error.toString());
 	}
 
 }

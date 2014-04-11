@@ -23,40 +23,41 @@ import com.logpie.rocket.tool.RocketLog;
 import com.logpie.rocket.tool.RocketRequestJSONParser;
 
 public class RocketServlet extends HttpServlet {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private static final String TAG = RocketHttpRequestParser.class.getName();
 	
+	public enum RequestType {
+		INSERT,
+		SEARCH;
+		public static RequestType matchType(String type)
+		{
+			for(RequestType requestType : RequestType.values())
+			{
+				if(requestType.toString().equals(type))
+					return requestType;
+			}
+			return null;
+		}
+	}
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
-		// convert String to JSONObject
+
+		// Convert Request to JSONObject
 		JSONObject json = RocketHttpRequestParser.httpRequestParser(request);
-		
-		// get the instance of Logic
+		// Get the instance of Logic
 		RocketServiceCentralLogic logic = RocketServiceCentralLogic.getInstance();
-		
 		try {
 			String type = json.getString("type");
-			switch(type){
-				case "insert":
-					// convert JSONObject to Metric Record list
-					RocketRequestJSONParser paser = new RocketRequestJSONParser();
-					List<MetricRecord> list = paser.parseRocketRequestJSON(json);
-					for(MetricRecord record : list)
-						logic.insertRecordIntoMongoDB(record, new InsertCallback());
-					break;
-				case "update":
-					break;
-				case "find":
-					break;
-				default:
-					break;
+			if(type.toString().equals(RequestType.INSERT.toString()))
+			{
+			 	// convert JSONObject to Metric Record list
+				RocketRequestJSONParser paser = new RocketRequestJSONParser();
+				List<MetricRecord> list = paser.parseRocketRequestJSON(json);
+				for(MetricRecord record : list)
+					logic.insertRecordIntoMongoDB(record, new InsertCallback());
 			}
+
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
