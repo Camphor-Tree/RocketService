@@ -35,10 +35,10 @@ public class Test {
 		
 	}
 	private static void testRocketWriteLog(){
-		RocketLog.writeFile("This is just a test1!");
-		RocketLog.writeFile("This is just a test2!");
-		RocketLog.writeFile("This is just a test3!");
-		RocketLog.writeFile("This is just a test4!");
+		RocketLog.writeFile("testTAG","This is just a test1!");
+		RocketLog.writeFile("testTAG","This is just a test2!");
+		RocketLog.writeFile("testTAG","This is just a test3!");
+		RocketLog.writeFile("testTAG","This is just a test4!");
 	}
 	
 	private void testConnection(){

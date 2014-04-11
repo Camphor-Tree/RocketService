@@ -14,7 +14,7 @@ import java.util.Date;
 
 public final class RocketLog {
 	private static boolean sDebug = false;
-	private static String sPath = "E:/";
+	private static String sPath = "/Users/xujiahang/Documents/";
 	private static final String TAG = RocketLog.class.getName();
 	
 	public static void openLog()
@@ -51,18 +51,22 @@ public final class RocketLog {
 		}
 	}
 	
-	public synchronized static void writeFile(String s)
+	public synchronized static void writeFile(String TAG, String info)
 	{
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		DateFormat timeFormat = new SimpleDateFormat("hh:mm:ss:SSS");
 	       //get current date time with Date()
 	    Date date = new Date();
 	    FileWriter writer = null;
 		try {
-			File file = new File(dateFormat.format(date),sPath);
+			File file = new File(sPath,dateFormat.format(date)+".txt");
 			if(!file.exists())
 				file.createNewFile();
 			writer = new FileWriter(file.getAbsoluteFile(),true);
-			writer.write(s);
+			writer.write(timeFormat.format(date)+"-->");
+			writer.write(TAG+": ");
+			writer.write(info);
+			writer.write("\n");
 			writer.flush();
 			writer.close();
 		}

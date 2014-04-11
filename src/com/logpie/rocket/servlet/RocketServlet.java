@@ -24,7 +24,7 @@ import com.logpie.rocket.tool.RocketRequestJSONParser;
 
 public class RocketServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final String TAG = RocketHttpRequestParser.class.getName();
+	private static final String TAG = RocketServlet.class.getName();
 	
 	public enum RequestType {
 		INSERT,
