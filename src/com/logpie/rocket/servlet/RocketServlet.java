@@ -64,7 +64,6 @@ public class RocketServlet extends HttpServlet {
 			RocketLog.i(TAG, "Servlet cannot find the correct type from HttpRequestJSONObject");
 		}
 		
-		
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
