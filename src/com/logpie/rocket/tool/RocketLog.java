@@ -14,7 +14,7 @@ import java.util.Date;
 
 public final class RocketLog {
 	private static boolean sDebug = false;
-	private static String sPath = "/Users/xujiahang/Documents/";
+	private static String sPath = "E:/";
 	private static final String TAG = RocketLog.class.getName();
 	
 	public static void openLog()

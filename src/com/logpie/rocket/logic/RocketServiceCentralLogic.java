@@ -16,6 +16,7 @@ import com.logpie.rocket.tool.RocketCallback;
 import com.logpie.rocket.tool.RocketLog;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
+import com.mongodb.DBCollection;
 
 public class RocketServiceCentralLogic {
 	private static final String TAG = RocketServiceCentralLogic.class.getName();
@@ -34,30 +35,53 @@ public class RocketServiceCentralLogic {
 		return sRocketServiceCentralLogic;
 	}
 	
-	public void insertRecordIntoMongoDB (MetricRecord metricRecord, RocketCallback callback){
+	//Central method of RocketService
+	//Insert metricRecord into MongoDB
+	public static void insertRecordIntoMongoDB (MetricRecord metricRecord, RocketCallback callback){
+		//TODO: We should add check here, to verify whether the company is valid.
+		
+		//TODO: Should add isMobileDeviceCheck
+		
 		//get DB name based on the company's name
 		DB db = MetricRecordAdapter.toDB(metricRecord);
 		if(db==null)
 		{
-			//TODO: We should add check here, to verify whether the company is valid.
-			try {
+			try 
+			{
 				callback.onError(new JSONObject().put("error", "company name not found or not supported"));
-			} catch (JSONException e) {
-				RocketLog.e(TAG,"JSONException");
+				return;
+			} 
+			catch (JSONException e) 
+			{
+				RocketLog.e(TAG,"JSONException when executing onError Callback");
 				e.printStackTrace();
 				return;
 			}
 		}
 
-		try {
-			//TODO: Find Title's ID  if not found, create one.
-			//return titleID
+		try 
+		{
+			DBCollection titleCollection = db.getCollection(CollectionNames.TITLE.getName());
+			//Try to find Title's ID  if not found, create one.
 			BasicDBObject titleObject = MetricRecordAdapter.toTitleBasicDBObject(metricRecord);
-			MongoDBHelper.getInstance().insert(db, db.getCollection(CollectionNames.TITLE.getName()), titleObject);
+			BasicDBObject queryResult = MongoDBHelper.getInstance().searchTitleObject(titleCollection, titleObject);
+			String titleId;
+			if(queryResult==null)
+			{
+				//if it is a new title, then insert the new titleObject, then try to get its _id
+				MongoDBHelper.getInstance().insert(db, titleCollection, titleObject);
+				queryResult = MongoDBHelper.getInstance().searchTitleObject(titleCollection, titleObject);
+				titleId = queryResult.getString("_id");
+			}
+			else
+			{
+				titleId = queryResult.getString("_id");
+			}
 			
-			//TODO:Record add title id, then insert into mongoDB.
-			//insert Record
 			BasicDBObject recordObject = MetricRecordAdapter.toRecordBasicDBObject(metricRecord);
+			//ecord add title id, then insert into mongoDB.
+			recordObject.append("titleID",titleId);
+			//insert Record
 			MongoDBHelper.getInstance().insert(db, db.getCollection(CollectionNames.RECORD.getName()), recordObject);
 		} catch (DBNotFoundException e) {
 			try {

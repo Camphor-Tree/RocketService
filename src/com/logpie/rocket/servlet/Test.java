@@ -8,15 +8,23 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.List;
 import java.util.Set;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.logpie.database.common.MongoDBHelper;
+import com.logpie.rocket.data.MetricRecord;
+import com.logpie.rocket.logic.RocketServiceCentralLogic;
+import com.logpie.rocket.tool.InsertCallback;
 import com.logpie.rocket.tool.RocketLog;
+import com.logpie.rocket.tool.RocketRequestJSONParser;
 import com.mongodb.DB;
 
 public class Test {
 
-	public static void main(String[] args) throws UnknownHostException {
+	public static void main(String[] args) throws UnknownHostException, JSONException {
 		// TODO Auto-generated method stub
 		/*
 		 * MongoDBHelper db = MongoDBHelper.getInstance();
@@ -31,9 +39,41 @@ public class Test {
 		//rocketDB.
 		 * 
 		 */
-		testRocketWriteLog();
+		//testRocketWriteLog();
+		//testConnection();
+		testLogic();
+	}
+	private static void testLogic() throws JSONException
+	{
+		String str = "{\"requestID\":\"1DEASEWO-2232GDA2\","
+				   + "\"company\":\"logpie\",\"platform\":\"java\","
+				   + "\"application\":\"logpie\","
+				   + "\"software_version\":\"1.01\","
+				   + "\"environment\":\"alpha\","
+				   + "\"metrics\":[{"
+				        + "\"component\":\"loginpage\","
+				        + "\"action\":\"register\","
+				        + "\"timestamp\":\"9800284756345\","
+				        + "\"time\":\"91\"},"
+				        + "{\"component\":\"loginpage\","
+				        + "\"action\":\"login\","
+				        + "\"timestamp\":\"9800284756389\","
+				        + "\"time\":\"27\"}],"
+				  + "\"mobile_device\":\"true\","
+				  + "\"OS_type\":\"android\","
+				  + "\"OS_version\":\"4.1\","
+				  + "\"device_manufacture\":\"Samsung\","
+				  + "\"device_version\":\"Galaxy S3\"}";
+		JSONObject json = new JSONObject(str);
+		
+		//RocketServiceCentralLogic logic = RocketServiceCentralLogic.getInstance();
+		RocketRequestJSONParser paser = new RocketRequestJSONParser();
+		List<MetricRecord> list = paser.parseRocketRequestJSON(json);
+		for(MetricRecord record : list)
+			RocketServiceCentralLogic.insertRecordIntoMongoDB(record, new InsertCallback());
 		
 	}
+	
 	private static void testRocketWriteLog(){
 		RocketLog.writeFile("testTAG","This is just a test1!");
 		RocketLog.writeFile("testTAG","This is just a test2!");
@@ -41,10 +81,10 @@ public class Test {
 		RocketLog.writeFile("testTAG","This is just a test4!");
 	}
 	
-	private void testConnection(){
+	private static void testConnection(){
 		Socket socket;
 		try{
-			socket = new Socket("localhost",8080);
+			socket = new Socket("localhost",8099);
 			OutputStream os;
 			os = socket.getOutputStream();
 			
@@ -58,6 +98,7 @@ public class Test {
 					   + "\"company\":\"logpie.com\",\"platform\":\"java\","
 					   + "\"application\":\"logpie\","
 					   + "\"software_version\":\"1.01\","
+					   + "\"environment\":\"alpha\","
 					   + "\"metrics\":[{"
 					        + "\"component\":\"loginpage\","
 					        + "\"action\":\"register\","

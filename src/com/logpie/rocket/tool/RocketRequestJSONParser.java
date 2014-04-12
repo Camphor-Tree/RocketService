@@ -15,26 +15,13 @@ import com.logpie.rocket.data.MetricRecord;
 
 public class RocketRequestJSONParser {
 	private static final String TAG = RocketRequestJSONParser.class.getName(); 
-
-	public static final String key_RequestID = "requestID";
-	public static final String key_Company = "company";
-	public static final String key_Platform = "platform";
-	public static final String key_Application = "application";
-	public static final String key_SoftwareVersion = "software_version";
-	public static final String key_Component = "component";
-	public static final String key_Metrics = "metrics";
-	public static final String key_Action = "action";
-	public static final String key_MetricTime = "time";
-	public static final String key_MobileDevice = "mobile_device";
-	public static final String key_OSType = "OS_type";
-	public static final String key_OSVersion = "OS_version";
-	public static final String key_DeviceManufacture = "samsung";
 	
 	String mRequestID;
 	String mCompany;
 	String mPlatform;
 	String mApplication;
 	String mSoftwareVersion;
+	String mEnvironment;
 	JSONArray mMetrics;
 	
 	boolean mIsMobileDevice;
@@ -54,6 +41,7 @@ public class RocketRequestJSONParser {
 			mPlatform = requestJSON.getString(MetricRecord.key_Platform);
 			mApplication = requestJSON.getString(MetricRecord.key_Application);
 			mSoftwareVersion = requestJSON.getString(MetricRecord.key_SoftwareVersion);
+			mEnvironment = requestJSON.getString(MetricRecord.key_Environment);
 			mMetrics = requestJSON.getJSONArray(MetricRecord.key_Metrics);
 			mIsMobileDevice = Boolean.getBoolean((requestJSON.getString(MetricRecord.key_MobileDevice)));
 		} catch (JSONException e) {
@@ -82,6 +70,7 @@ public class RocketRequestJSONParser {
 				metricRecord.setPlatform(mPlatform);
 				metricRecord.setApplication(mApplication);
 				metricRecord.setSoftwareVersion(mSoftwareVersion);
+				metricRecord.setEnvironment(mEnvironment);
 				try {
 					//If there are mobile device info, then add it to the metricRecord
 					if(mIsMobileDevice)

@@ -7,6 +7,8 @@ package com.logpie.database.common;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bson.types.ObjectId;
+
 import com.logpie.database.exception.DBNotFoundException;
 import com.logpie.rocket.data.MetricRecord;
 import com.logpie.rocket.tool.RocketLog;
@@ -20,7 +22,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
 
 
-public class MongoDBHelper extends DatabaseHelper{
+public final class MongoDBHelper extends DatabaseHelper{
 	private final String TAG = MongoDBHelper.class.getName();
 	
 	//this should be Singleton, the one and the only.
@@ -29,20 +31,23 @@ public class MongoDBHelper extends DatabaseHelper{
 	//A MongoDB client with internal connection pooling. For most applications, you should have one MongoClient instance for the entire JVM.
 	private MongoClient mMongoClient;
 	//DBMap store all the db RocketService connect to. (dbName -> DB)
-	private static HashMap<String,DB> sDBMap;
+	private static HashMap<String,DB> sDBMap = new HashMap<String,DB>();
 	
 	private MongoDBHelper(){
 		super(DBenum.MongoDB);
 		this.connect();
-		sDBMap = new HashMap<String,DB>();	
 	}
 	
 	public synchronized static MongoDBHelper getInstance()
 	{
 		if(sMongoDBHelper!=null)
+		{
 			return sMongoDBHelper;
+		}
 		else
-			return new MongoDBHelper();
+		{
+			return sMongoDBHelper = new MongoDBHelper();
+		}
 	}
 	
 	@Override
@@ -122,8 +127,10 @@ public class MongoDBHelper extends DatabaseHelper{
 	}
 	
 	//check whether the collection has been established
-	public 
-	
+	public boolean isCollectionExist(DB db, String collectionName)
+	{
+		return db.collectionExists(collectionName);
+	}
 	
 	
 	//insert one single record into specific collection
@@ -186,6 +193,13 @@ public class MongoDBHelper extends DatabaseHelper{
 			return collection.insert(dbObject,WriteConcern.SAFE).getLastError().ok();
 		}
 	}
+	
+	public BasicDBObject searchTitleObject(DBCollection collection, BasicDBObject object)
+	{
+		return (BasicDBObject)collection.findOne(object);
+	}
+	
+	
 	
 	
 }
