@@ -189,6 +189,27 @@ public final class MongoDBHelper extends DatabaseHelper{
 		}
 	}
 	
+	public void createTitleIndex(DBCollection collection)
+	{
+		collection.createIndex(new BasicDBObject().append(MetricRecord.key_Application, 1));
+		collection.createIndex(new BasicDBObject().append(MetricRecord.key_Component, 1));
+		collection.createIndex(new BasicDBObject().append(MetricRecord.key_Action, 1));
+		collection.createIndex(new BasicDBObject().append(MetricRecord.key_Environment, 1));
+		collection.createIndex(new BasicDBObject().append(MetricRecord.key_Platform, 1));
+		collection.createIndex(new BasicDBObject().append(MetricRecord.key_SoftwareVersion, 1));
+		
+		collection.createIndex(new BasicDBObject().append(MetricRecord.key_MobileDevice, 1));
+		collection.createIndex(new BasicDBObject().append(MetricRecord.key_DeviceManufacture, 1));
+		collection.createIndex(new BasicDBObject().append(MetricRecord.key_DeviceVersion, 1));
+		collection.createIndex(new BasicDBObject().append(MetricRecord.key_OSType, 1));
+		collection.createIndex(new BasicDBObject().append(MetricRecord.key_OSVersion, 1));
+	}
+	
+	public void createRecordIndex(DBCollection collection)
+	{
+		collection.createIndex(new BasicDBObject().append("titleID", 1));
+	}
+	
 	public BasicDBObject searchTitleObject(DBCollection collection, BasicDBObject object)
 	{
 		return (BasicDBObject)collection.findOne(object);

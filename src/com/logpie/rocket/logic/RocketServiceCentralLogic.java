@@ -21,6 +21,7 @@ import com.mongodb.DBCollection;
 public class RocketServiceCentralLogic {
 	private static final String TAG = RocketServiceCentralLogic.class.getName();
 	private static RocketServiceCentralLogic sRocketServiceCentralLogic;
+	private static MongoDBHelper sMongoDBHelper = MongoDBHelper.getInstance();
 	
 	private RocketServiceCentralLogic()
 	{
@@ -44,6 +45,7 @@ public class RocketServiceCentralLogic {
 		
 		//get DB name based on the company's name
 		DB db = MetricRecordAdapter.toDB(metricRecord);
+
 		if(db==null)
 		{
 			try 
@@ -58,30 +60,49 @@ public class RocketServiceCentralLogic {
 				return;
 			}
 		}
-
+		handleIndexInitialization(db);
+	
+		
+		//get titleId from the title collection
+		//check whether the title exist, if so, find the _id, if not, insert new title then return the id
 		String titleId = handleTitleCollection(db, metricRecord);
 		handleRecord(db, titleId, metricRecord, callback);
 		handleInsertSuccess(callback);
 
 	}
 	
+	//if the collection just created, then create the index for it.
+	private static synchronized void handleIndexInitialization(DB db)
+	{
+		//create
+		if(!sMongoDBHelper.isCollectionExist(db,CollectionNames.TITLE.getName()))
+		{
+			sMongoDBHelper.createTitleIndex(db.getCollection(CollectionNames.TITLE.getName()));
+		}
+		if(!sMongoDBHelper.isCollectionExist(db,CollectionNames.RECORD.getName()))
+		{
+			sMongoDBHelper.createRecordIndex(db.getCollection(CollectionNames.RECORD.getName()));
+		}
+	}
+	
 	private static synchronized String handleTitleCollection(DB db, MetricRecord metricRecord)
 	{
 		DBCollection titleCollection = db.getCollection(CollectionNames.TITLE.getName());
+		sMongoDBHelper.createTitleIndex(titleCollection);
 		//Try to find Title's ID  if not found, create one.
 		BasicDBObject titleObject = MetricRecordAdapter.toTitleBasicDBObject(metricRecord);
-		BasicDBObject queryResult = MongoDBHelper.getInstance().searchTitleObject(titleCollection, titleObject);
+		BasicDBObject queryResult = sMongoDBHelper.searchTitleObject(titleCollection, titleObject);
 		String titleId;
 		if(queryResult==null)
 		{
 			//if it is a new title, then insert the new titleObject, then try to get its _id
 			try {
-				MongoDBHelper.getInstance().insert(db, titleCollection, titleObject);
+				sMongoDBHelper.insert(db, titleCollection, titleObject);
 			} catch (DBNotFoundException e) {
 				e.printStackTrace();
 				RocketLog.e(TAG,e.getMessage());
 			}
-			queryResult = MongoDBHelper.getInstance().searchTitleObject(titleCollection, titleObject);
+			queryResult = sMongoDBHelper.searchTitleObject(titleCollection, titleObject);
 			titleId = queryResult.getString("_id");
 		}
 		else
@@ -99,7 +120,7 @@ public class RocketServiceCentralLogic {
 			//ecord add title id, then insert into mongoDB.
 			recordObject.append("titleID",titleId);
 			//insert Record
-			MongoDBHelper.getInstance().insert(db, db.getCollection(CollectionNames.RECORD.getName()), recordObject);
+			sMongoDBHelper.insert(db, db.getCollection(CollectionNames.RECORD.getName()), recordObject);
 		} catch (DBNotFoundException e) {
 			handleInsertError(callback);
 			RocketLog.e(TAG,e.getMessage());
