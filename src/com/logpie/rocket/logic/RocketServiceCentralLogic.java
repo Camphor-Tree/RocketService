@@ -59,25 +59,42 @@ public class RocketServiceCentralLogic {
 			}
 		}
 
+		String titleId = handleTitleCollection(db, metricRecord);
+		handleRecord(db, titleId, metricRecord, callback);
+		handleInsertSuccess(callback);
+
+	}
+	
+	private static synchronized String handleTitleCollection(DB db, MetricRecord metricRecord)
+	{
+		DBCollection titleCollection = db.getCollection(CollectionNames.TITLE.getName());
+		//Try to find Title's ID  if not found, create one.
+		BasicDBObject titleObject = MetricRecordAdapter.toTitleBasicDBObject(metricRecord);
+		BasicDBObject queryResult = MongoDBHelper.getInstance().searchTitleObject(titleCollection, titleObject);
+		String titleId;
+		if(queryResult==null)
+		{
+			//if it is a new title, then insert the new titleObject, then try to get its _id
+			try {
+				MongoDBHelper.getInstance().insert(db, titleCollection, titleObject);
+			} catch (DBNotFoundException e) {
+				e.printStackTrace();
+				RocketLog.e(TAG,e.getMessage());
+			}
+			queryResult = MongoDBHelper.getInstance().searchTitleObject(titleCollection, titleObject);
+			titleId = queryResult.getString("_id");
+		}
+		else
+		{
+			titleId = queryResult.getString("_id");
+		}
+		return titleId;
+	}
+	
+	private static void handleRecord(DB db, String titleId, MetricRecord metricRecord, RocketCallback callback)
+	{
 		try 
 		{
-			DBCollection titleCollection = db.getCollection(CollectionNames.TITLE.getName());
-			//Try to find Title's ID  if not found, create one.
-			BasicDBObject titleObject = MetricRecordAdapter.toTitleBasicDBObject(metricRecord);
-			BasicDBObject queryResult = MongoDBHelper.getInstance().searchTitleObject(titleCollection, titleObject);
-			String titleId;
-			if(queryResult==null)
-			{
-				//if it is a new title, then insert the new titleObject, then try to get its _id
-				MongoDBHelper.getInstance().insert(db, titleCollection, titleObject);
-				queryResult = MongoDBHelper.getInstance().searchTitleObject(titleCollection, titleObject);
-				titleId = queryResult.getString("_id");
-			}
-			else
-			{
-				titleId = queryResult.getString("_id");
-			}
-			
 			BasicDBObject recordObject = MetricRecordAdapter.toRecordBasicDBObject(metricRecord);
 			//ecord add title id, then insert into mongoDB.
 			recordObject.append("titleID",titleId);
@@ -87,9 +104,6 @@ public class RocketServiceCentralLogic {
 			handleInsertError(callback);
 			RocketLog.e(TAG,e.getMessage());
 		}
-
-			handleInsertSuccess(callback);
-
 	}
 	
 	private static void handleInsertSuccess(RocketCallback callback)
