@@ -2,7 +2,7 @@
  * Copyright (c) 2014 logpie.com
  * All rights reserved.
 */
-package com.logpie.database.exception;
+package com.logpie.rocket.exception;
 
 public class DBNotFoundException extends Exception {
 	/**

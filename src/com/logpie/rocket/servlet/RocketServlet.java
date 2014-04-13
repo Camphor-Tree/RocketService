@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.logpie.rocket.data.MetricRecord;
+import com.logpie.rocket.exception.HttpRequestIsNullException;
 import com.logpie.rocket.logic.RocketServiceCentralLogic;
 import com.logpie.rocket.tool.InsertCallback;
 import com.logpie.rocket.tool.RocketHttpRequestParser;
@@ -40,12 +41,14 @@ public class RocketServlet extends HttpServlet {
 		}
 	}
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response){
 
-		// Convert Request to JSONObject
-		JSONObject json = RocketHttpRequestParser.httpRequestParser(request);
 		try {
+			// Convert Request to JSONObject
+			JSONObject json = RocketHttpRequestParser.httpRequestParser(request);
+			// Get the instance of Logic
+			RocketServiceCentralLogic logic = RocketServiceCentralLogic.getInstance();
+		
 			String type = json.getString("type");
 			if(type.toString().equals(RequestType.INSERT.toString()))
 			{
@@ -62,6 +65,9 @@ public class RocketServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			RocketLog.i(TAG, "Servlet cannot find the correct type from HttpRequestJSONObject");
+		} catch (HttpRequestIsNullException e){
+			e.printStackTrace();
+			RocketLog.i(TAG, "HttpRequest is null.");
 		}
 		
 	}

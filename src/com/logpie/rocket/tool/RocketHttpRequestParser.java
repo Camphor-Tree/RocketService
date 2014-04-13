@@ -9,11 +9,15 @@ import javax.servlet.http.HttpServletRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.logpie.rocket.exception.HttpRequestIsNullException;
+
 public class RocketHttpRequestParser {
 	private static final String TAG = RocketHttpRequestParser.class.getName();
 	
 	// Check JsonObject is null or not. Null means parser fails.
-	public static JSONObject httpRequestParser(HttpServletRequest request){
+	public static JSONObject httpRequestParser(HttpServletRequest request) throws HttpRequestIsNullException{
+		if(request==null)
+			throw new HttpRequestIsNullException();
 		
 		JSONObject jsonObj = new JSONObject();
 		try {

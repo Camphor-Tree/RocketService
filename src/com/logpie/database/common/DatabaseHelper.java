@@ -4,7 +4,7 @@
 */
 package com.logpie.database.common;
 
-import com.logpie.database.exception.DBNotFoundException;
+import com.logpie.rocket.exception.DBNotFoundException;
 
 public abstract class DatabaseHelper {
 	

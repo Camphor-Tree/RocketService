@@ -8,9 +8,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.logpie.database.common.MongoDBHelper;
-import com.logpie.database.exception.DBNotFoundException;
 import com.logpie.rocket.data.CollectionNames;
 import com.logpie.rocket.data.MetricRecord;
+import com.logpie.rocket.exception.DBNotFoundException;
 import com.logpie.rocket.tool.MetricRecordAdapter;
 import com.logpie.rocket.tool.RocketCallback;
 import com.logpie.rocket.tool.RocketLog;

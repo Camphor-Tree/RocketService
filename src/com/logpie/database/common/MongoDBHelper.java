@@ -7,9 +7,9 @@ package com.logpie.database.common;
 import java.util.HashMap;
 import java.util.List;
 
-import com.logpie.database.exception.DBNotFoundException;
+import com.logpie.rocket.data.MetricRecord;
+import com.logpie.rocket.exception.DBNotFoundException;
 import com.logpie.rocket.tool.RocketLog;
-
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.Cursor;
@@ -121,11 +121,12 @@ public final class MongoDBHelper extends DatabaseHelper{
 	}
 	
 	//check whether the collection has been established
+
 	public boolean isCollectionExist(DB db, String collectionName)
 	{
 		return db.collectionExists(collectionName);
 	}
-	
+
 	
 	//insert one single record into specific collection
 	//return true, if success.
