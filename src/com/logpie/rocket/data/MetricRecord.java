@@ -65,11 +65,11 @@ public class MetricRecord {
     private String mMetricTime;
     private String mMetricTimeStamp;
     private String mEnvironment;
+    private Boolean mIsMobileDevice;
     
 	//The files below are optional
-    private Boolean mIsMobileDevice;
     private String mOSType;
-    private Float mOSVersion;
+    private String mOSVersion;
     private String mDeviceManufacture;
     private String mDeviceVersion;
 	public String getRequestID() {
@@ -142,10 +142,10 @@ public class MetricRecord {
 	public void setOSType(String oSType) {
 		mOSType = oSType;
 	}
-	public Float getOSVersion() {
+	public String getOSVersion() {
 		return mOSVersion;
 	}
-	public void setOSVersion(Float oSVersion) {
+	public void setOSVersion(String oSVersion) {
 		mOSVersion = oSVersion;
 	}
 	public String getDeviceManufacture() {

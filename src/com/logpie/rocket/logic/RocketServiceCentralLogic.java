@@ -40,7 +40,7 @@ public class RocketServiceCentralLogic {
 	public static void insertRecordIntoMongoDB (MetricRecord metricRecord, RocketCallback callback){
 		//TODO: We should add check here, to verify whether the company is valid.
 		
-		//TODO: Should add isMobileDeviceCheck
+		//TODO: Should add 
 		
 		//get DB name based on the company's name
 		DB db = MetricRecordAdapter.toDB(metricRecord);
@@ -84,16 +84,33 @@ public class RocketServiceCentralLogic {
 			//insert Record
 			MongoDBHelper.getInstance().insert(db, db.getCollection(CollectionNames.RECORD.getName()), recordObject);
 		} catch (DBNotFoundException e) {
-			try {
-				callback.onError(new JSONObject().put("error", "company name not found or not supported"));
-			} catch (JSONException jsonException) {
-				RocketLog.e(TAG,"JSONException when executing onError callback");
-				jsonException.printStackTrace();
-				return;
-			}
-			e.printStackTrace();
+			handleInsertError(callback);
+			RocketLog.e(TAG,e.getMessage());
 		}
-		
-	}
 
+			handleInsertSuccess(callback);
+
+	}
+	
+	private static void handleInsertSuccess(RocketCallback callback)
+	{
+		try {
+			callback.onSuccess(new JSONObject().append(TAG,"Insert MetridRecord into RocketService DataBase Success!"));
+		} catch (JSONException e) {
+			RocketLog.e(TAG,e.getMessage());
+			RocketLog.writeFile(TAG,"JSONException when executing onError callback");
+			return;
+		}
+	}
+	
+	private static void handleInsertError(RocketCallback callback)
+	{
+		try {
+			callback.onError(new JSONObject().append(TAG," error: company name not found or not supported"));
+		} catch (JSONException e) {
+			RocketLog.e(TAG,e.getMessage());
+			RocketLog.writeFile(TAG,"JSONException when executing onError callback");
+			return;
+		}
+	}
 }

@@ -7,10 +7,7 @@ package com.logpie.database.common;
 import java.util.HashMap;
 import java.util.List;
 
-import org.bson.types.ObjectId;
-
 import com.logpie.database.exception.DBNotFoundException;
-import com.logpie.rocket.data.MetricRecord;
 import com.logpie.rocket.tool.RocketLog;
 
 import com.mongodb.BasicDBList;
@@ -40,14 +37,11 @@ public final class MongoDBHelper extends DatabaseHelper{
 	
 	public synchronized static MongoDBHelper getInstance()
 	{
-		if(sMongoDBHelper!=null)
+		if(sMongoDBHelper==null)
 		{
-			return sMongoDBHelper;
+			sMongoDBHelper = new MongoDBHelper();
 		}
-		else
-		{
-			return sMongoDBHelper = new MongoDBHelper();
-		}
+		return sMongoDBHelper;
 	}
 	
 	@Override

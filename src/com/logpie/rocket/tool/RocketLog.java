@@ -5,7 +5,6 @@
 package com.logpie.rocket.tool;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -15,7 +14,7 @@ import java.util.Date;
 public final class RocketLog {
 	private static boolean sDebug = false;
 	private static String sPath = "E:/";
-	private static final String TAG = RocketLog.class.getName();
+	private static final String LOG_TAG = RocketLog.class.getName();
 	
 	public static void openLog()
 	{
@@ -55,7 +54,7 @@ public final class RocketLog {
 	{
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 		DateFormat timeFormat = new SimpleDateFormat("hh:mm:ss:SSS");
-	       //get current date time with Date()
+	    //get current date time with Date()
 	    Date date = new Date();
 	    FileWriter writer = null;
 		try {
@@ -71,8 +70,8 @@ public final class RocketLog {
 			writer.close();
 		}
 		catch (IOException e) {
-			RocketLog.e(TAG,"IOException: When writing log file.");
-			e.printStackTrace();
+			RocketLog.e(LOG_TAG,"IOException: When writing log file.");
+			RocketLog.e(LOG_TAG, e.getMessage());
 		}
 	}	
 }

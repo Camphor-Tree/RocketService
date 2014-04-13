@@ -1,6 +1,5 @@
 package com.logpie.rocket.tool;
 
-import java.io.File;
 import java.util.Date;
 
 import org.json.JSONObject;

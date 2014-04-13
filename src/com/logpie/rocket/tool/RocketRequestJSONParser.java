@@ -23,8 +23,7 @@ public class RocketRequestJSONParser {
 	String mSoftwareVersion;
 	String mEnvironment;
 	JSONArray mMetrics;
-	
-	boolean mIsMobileDevice;
+	Boolean mIsMobileDevice;
 	
 	public List<MetricRecord> parseRocketRequestJSON(JSONObject requestJSON)
 	{
@@ -71,6 +70,7 @@ public class RocketRequestJSONParser {
 				metricRecord.setApplication(mApplication);
 				metricRecord.setSoftwareVersion(mSoftwareVersion);
 				metricRecord.setEnvironment(mEnvironment);
+				metricRecord.setIsMobileDevice(mIsMobileDevice);
 				try {
 					//If there are mobile device info, then add it to the metricRecord
 					if(mIsMobileDevice)
@@ -102,7 +102,7 @@ public class RocketRequestJSONParser {
 	private void setMobileDeviceInfo(MetricRecord metricRecord, JSONObject requestJSON) throws JSONException
 	{
 		metricRecord.setOSType(requestJSON.getString(MetricRecord.key_OSType));
-		metricRecord.setOSVersion(Float.valueOf(requestJSON.getString(MetricRecord.key_OSVersion)));
+		metricRecord.setOSVersion(requestJSON.getString(MetricRecord.key_OSVersion));
 		metricRecord.setDeviceManufacture((requestJSON.getString(MetricRecord.key_DeviceManufacture)));
 		metricRecord.setDeviceVersion(requestJSON.getString(MetricRecord.key_DeviceVersion));
 	}

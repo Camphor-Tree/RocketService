@@ -33,6 +33,12 @@ public final class MetricRecordAdapter {
 		dbObject.append(MetricRecord.key_Platform, metricRecord.getPlatform());
 		dbObject.append(MetricRecord.key_SoftwareVersion, metricRecord.getSoftwareVersion());
 		dbObject.append(MetricRecord.key_Environment, metricRecord.getEnvironment());
+		dbObject.append(MetricRecord.key_MobileDevice, metricRecord.getIsMobileDevice());
+		//check whether the title should include mobilde device information
+		if(isMobileDevice(metricRecord))
+		{
+			addMobileInformation(dbObject,metricRecord);
+		}
 		return dbObject;
 	};
 	
@@ -49,5 +55,20 @@ public final class MetricRecordAdapter {
 		
 		return dbObject;
 	};
+	
+	//check whether the title should include mobilde device information
+	private static boolean isMobileDevice(MetricRecord metricRecord)
+	{
+		return metricRecord.getIsMobileDevice().booleanValue();
+	}
+	
+	//add mobile device information.
+	private static void addMobileInformation(BasicDBObject dbObject, MetricRecord metricRecord)
+	{
+		dbObject.append(MetricRecord.key_OSType, metricRecord.getOSType());
+		dbObject.append(MetricRecord.key_OSVersion, metricRecord.getOSVersion());
+		dbObject.append(MetricRecord.key_DeviceManufacture, metricRecord.getDeviceManufacture());
+		dbObject.append(MetricRecord.key_DeviceVersion, metricRecord.getDeviceVersion());
+	}
 
 }

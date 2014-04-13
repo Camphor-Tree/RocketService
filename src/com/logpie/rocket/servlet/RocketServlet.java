@@ -45,8 +45,6 @@ public class RocketServlet extends HttpServlet {
 
 		// Convert Request to JSONObject
 		JSONObject json = RocketHttpRequestParser.httpRequestParser(request);
-		// Get the instance of Logic
-		RocketServiceCentralLogic logic = RocketServiceCentralLogic.getInstance();
 		try {
 			String type = json.getString("type");
 			if(type.toString().equals(RequestType.INSERT.toString()))
@@ -55,7 +53,9 @@ public class RocketServlet extends HttpServlet {
 				RocketRequestJSONParser paser = new RocketRequestJSONParser();
 				List<MetricRecord> list = paser.parseRocketRequestJSON(json);
 				for(MetricRecord record : list)
-					logic.insertRecordIntoMongoDB(record, new InsertCallback());
+				{
+					RocketServiceCentralLogic.insertRecordIntoMongoDB(record, new InsertCallback());
+				}
 			}
 
 		} catch (JSONException e) {
