@@ -15,5 +15,7 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="/Users/xujiahang/Documents/workspace/RocketService/library/mongo-java-driver-2.12.0-rc2.jar"/>
 	<classpathentry kind="lib" path="/Users/xujiahang/Documents/workspace/RocketService/library/org.json-20120521.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="/Users/xujiahang/Documents/workspace/RocketService/library/mockito-all-1.9.5.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
