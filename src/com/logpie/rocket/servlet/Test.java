@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -70,7 +71,7 @@ public class Test {
 		RocketRequestJSONParser paser = new RocketRequestJSONParser();
 		List<MetricRecord> list = paser.parseRocketRequestJSON(json);
 		for(MetricRecord record : list)
-			RocketServiceCentralLogic.insertRecordIntoMongoDB(record, new InsertCallback());
+			RocketServiceCentralLogic.getInstance().insertRecordIntoMongoDB(record, new InsertCallback());
 		
 	}
 	

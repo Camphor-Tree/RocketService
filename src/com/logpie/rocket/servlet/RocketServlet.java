@@ -42,7 +42,14 @@ public class RocketServlet extends HttpServlet {
 	}
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response){
-
+		//TODO: we should remove in the future
+		//Currently we can just keep it.
+		doPost(request,response);
+		
+	}
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+		RocketLog.i(TAG,"Start parsing request");
 		try {
 			// Convert Request to JSONObject
 			JSONObject json = RocketHttpRequestParser.httpRequestParser(request);
@@ -57,24 +64,17 @@ public class RocketServlet extends HttpServlet {
 				List<MetricRecord> list = paser.parseRocketRequestJSON(json);
 				for(MetricRecord record : list)
 				{
-					RocketServiceCentralLogic.insertRecordIntoMongoDB(record, new InsertCallback());
+					logic.insertRecordIntoMongoDB(record, new InsertCallback());
 				}
 			}
 
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			RocketLog.i(TAG, "Servlet cannot find the correct type from HttpRequestJSONObject");
 		} catch (HttpRequestIsNullException e){
 			e.printStackTrace();
 			RocketLog.i(TAG, "HttpRequest is null.");
 		}
-		
-	}
-	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		doGet(request,response);
 	}
 	
 }

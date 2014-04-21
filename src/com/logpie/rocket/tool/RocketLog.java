@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public final class RocketLog {
-	private static boolean sDebug = false;
+	private static boolean sDebug = true;
 	private static String sPath = "E:/";
 	private static final String LOG_TAG = RocketLog.class.getName();
 	

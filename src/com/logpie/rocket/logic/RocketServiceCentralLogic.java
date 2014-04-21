@@ -38,7 +38,7 @@ public class RocketServiceCentralLogic {
 	
 	//Central method of RocketService
 	//Insert metricRecord into MongoDB
-	public static void insertRecordIntoMongoDB (MetricRecord metricRecord, RocketCallback callback){
+	public void insertRecordIntoMongoDB (MetricRecord metricRecord, RocketCallback callback){
 		//TODO: We should add check here, to verify whether the company is valid.
 		
 		//TODO: Should add 
