@@ -32,14 +32,12 @@ public class RocketHttpRequestParser {
 	
 		}
 		catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			RocketLog.i(TAG, "JSON convert exception. Cannot convert String to JSONObject");
 			// Return null if find IO exception
 			return null; 
 		}
 		catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			RocketLog.i(TAG, "HttpRequest IO exception. Cannot get httprequest inputstream.");
 			// Return null if find IO exception

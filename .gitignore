@@ -2,3 +2,6 @@
 build
 #ignore the .classpath
 .classpath
+bin
+.settings
+gen
